@@ -161,7 +161,7 @@ nextBucket:
 	}
 
 	println("max bucket collisions:", collisions)
-	println("keys:", len(table))
+	println("keys:", len(keys))
 	println("hash functions:", len(hasher.r))
 
 	return &CHD{
