@@ -160,9 +160,9 @@ nextBucket:
 			i, len(buckets), len(bucket.keys), &bucket)
 	}
 
-	// println("max bucket collisions:", collisions)
-	// println("keys:", len(table))
-	// println("hash functions:", len(hasher.r))
+	println("max bucket collisions:", collisions)
+	println("keys:", len(table))
+	println("hash functions:", len(hasher.r))
 
 	return &CHD{
 		r:       hasher.r,
