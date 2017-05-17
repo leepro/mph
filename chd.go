@@ -44,8 +44,8 @@ type CHD struct {
 	// more than 2^16 hash functions O_o
 	indices []uint16
 	// Final table of values.
-	keys   [][]byte
-	values [][]byte
+	keys [][]byte
+	//values [][]byte
 }
 
 func hasher(data []byte) uint64 {
@@ -83,13 +83,13 @@ func Mmap(b []byte) (*CHD, error) {
 	el := bi.ReadInt()
 
 	c.keys = make([][]byte, el)
-	c.values = make([][]byte, el)
+	// c.values = make([][]byte, el)
 
 	for i := uint64(0); i < el; i++ {
 		kl := bi.ReadInt()
-		vl := bi.ReadInt()
+		// vl := bi.ReadInt()
 		c.keys[i] = bi.Read(kl)
-		c.values[i] = bi.Read(vl)
+		// c.values[i] = bi.Read(vl)
 	}
 
 	return c, nil
@@ -100,24 +100,26 @@ func (c *CHD) HashParameters() []uint64 {
 }
 
 // Get an entry from the hash table.
-func (c *CHD) Get(key []byte) []byte {
+func (c *CHD) Get(key []byte) int {
 	r0 := c.r[0]
 	h := hasher(key) ^ r0
 	i := h % uint64(len(c.indices))
 	ri := c.indices[i]
 	// This can occur if there were unassigned slots in the hash table.
 	if ri >= uint16(len(c.r)) {
-		return nil
+		return -1
 	}
 	r := c.r[ri]
 	ti := (h ^ r) % uint64(len(c.keys))
 	// fmt.Printf("r[0]=%d, h=%d, i=%d, ri=%d, r=%d, ti=%d\n", c.r[0], h, i, ri, r, ti)
 	k := c.keys[ti]
 	if bytes.Compare(k, key) != 0 {
-		return nil
+		return -1
 	}
-	v := c.values[ti]
-	return v
+	// v := c.values[ti]
+	// return v
+	// v := c.values[ti]
+	return int(ti)
 }
 
 func (c *CHD) Len() int {
@@ -155,14 +157,12 @@ func (c *CHD) Write(w io.Writer) error {
 	}
 
 	for i := range c.keys {
-		k, v := c.keys[i], c.values[i]
-		if err := write(uint32(len(k)), uint32(len(v))); err != nil {
+		// k, v := c.keys[i], c.values[i]
+		k := c.keys[i]
+		if err := write(uint32(len(k))); err != nil {
 			return err
 		}
 		if _, err := w.Write(k); err != nil {
-			return err
-		}
-		if _, err := w.Write(v); err != nil {
 			return err
 		}
 	}
@@ -174,8 +174,9 @@ type Iterator struct {
 	c *CHD
 }
 
-func (c *Iterator) Get() (key []byte, value []byte) {
-	return c.c.keys[c.i], c.c.values[c.i]
+func (c *Iterator) Get() (key []byte) {
+	// return c.c.keys[c.i], c.c.values[c.i]
+	return c.c.keys[c.i]
 }
 
 func (c *Iterator) Next() *Iterator {

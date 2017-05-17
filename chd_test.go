@@ -73,7 +73,6 @@ func TestCHDSerialization(t *testing.T) {
 	assert.Equal(t, n.r, m.r)
 	assert.Equal(t, n.indices, m.indices)
 	assert.Equal(t, n.keys, m.keys)
-	assert.Equal(t, n.values, m.values)
 	for _, v := range words {
 		assert.Equal(t, []byte(v), n.Get([]byte(v)))
 	}
@@ -92,7 +91,6 @@ func TestCHDSerialization_empty(t *testing.T) {
 	assert.Equal(t, n.r, m.r)
 	assert.Equal(t, n.indices, m.indices)
 	assert.Equal(t, n.keys, m.keys)
-	assert.Equal(t, n.values, m.values)
 }
 
 func TestCHDSerialization_one(t *testing.T) {
@@ -109,7 +107,6 @@ func TestCHDSerialization_one(t *testing.T) {
 	assert.Equal(t, n.r, m.r)
 	assert.Equal(t, n.indices, m.indices)
 	assert.Equal(t, n.keys, m.keys)
-	assert.Equal(t, n.values, m.values)
 }
 
 func BenchmarkBuiltinMap(b *testing.B) {

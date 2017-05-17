@@ -16,9 +16,9 @@ type chdHasher struct {
 }
 
 type bucket struct {
-	index  uint64
-	keys   [][]byte
-	values [][]byte
+	index uint64
+	keys  [][]byte
+	// values [][]byte
 }
 
 func (b *bucket) String() string {
@@ -38,8 +38,8 @@ func (b bucketVector) Swap(i, j int)      { b[i], b[j] = b[j], b[i] }
 
 // Build a new CDH MPH.
 type CHDBuilder struct {
-	keys   [][]byte
-	values [][]byte
+	keys [][]byte
+	// values [][]byte
 }
 
 // Create a new CHD hash table builder.
@@ -50,7 +50,7 @@ func Builder() *CHDBuilder {
 // Add a key and value to the hash table.
 func (b *CHDBuilder) Add(key []byte, value []byte) {
 	b.keys = append(b.keys, key)
-	b.values = append(b.values, value)
+	// b.values = append(b.values, value)
 }
 
 // Try to find a hash function that does not cause collisions with table, when
@@ -83,7 +83,7 @@ func tryHash(hasher *chdHasher, seen map[uint64]bool, keys [][]byte, values [][]
 	// Update the the hash table.
 	for i, h := range hashes {
 		keys[h] = bucket.keys[i]
-		values[h] = bucket.values[i]
+		//values[h] = bucket.values[i]
 	}
 	return true
 }
@@ -96,7 +96,7 @@ func (b *CHDBuilder) Build() (*CHD, error) {
 	}
 
 	keys := make([][]byte, n)
-	values := make([][]byte, n)
+	//values := make([][]byte, n)
 	hasher := newCHDHasher(n, m)
 	buckets := make(bucketVector, m)
 	indices := make([]uint16, m)
@@ -111,7 +111,7 @@ func (b *CHDBuilder) Build() (*CHD, error) {
 
 	for i := range b.keys {
 		key := b.keys[i]
-		value := b.values[i]
+		// value := b.values[i]
 		k := string(key)
 		if duplicates[k] {
 			return nil, errors.New("duplicate key " + k)
@@ -121,7 +121,7 @@ func (b *CHDBuilder) Build() (*CHD, error) {
 
 		buckets[oh].index = oh
 		buckets[oh].keys = append(buckets[oh].keys, key)
-		buckets[oh].values = append(buckets[oh].values, value)
+		// buckets[oh].values = append(buckets[oh].values, value)
 	}
 
 	// Order buckets by size (retaining the hash index)
@@ -135,7 +135,7 @@ nextBucket:
 
 		// Check existing hash functions.
 		for ri, r := range hasher.r {
-			if tryHash(hasher, seen, keys, values, indices, &bucket, uint16(ri), r) {
+			if tryHash(hasher, seen, keys, nil, indices, &bucket, uint16(ri), r) {
 				continue nextBucket
 			}
 		}
@@ -148,7 +148,7 @@ nextBucket:
 				collisions = i
 			}
 			ri, r := hasher.Generate()
-			if tryHash(hasher, seen, keys, values, indices, &bucket, ri, r) {
+			if tryHash(hasher, seen, keys, nil, indices, &bucket, ri, r) {
 				hasher.Add(r)
 				continue nextBucket
 			}
@@ -170,7 +170,7 @@ nextBucket:
 		r:       hasher.r,
 		indices: indices,
 		keys:    keys,
-		values:  values,
+		// values:  values,
 	}, nil
 }
 
