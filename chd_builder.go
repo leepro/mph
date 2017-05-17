@@ -164,7 +164,7 @@ nextBucket:
 	println("keys:", len(keys))
 	println("hash functions:", len(hasher.r))
 
-	fmt.Printf("functions %#v\n", hasher)
+	// fmt.Printf("functions %#v\n", hasher)
 
 	return &CHD{
 		r:       hasher.r,

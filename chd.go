@@ -95,7 +95,7 @@ func Mmap(b []byte) (*CHD, error) {
 	return c, nil
 }
 
-func (c *CHD) HashFuns() []uint64 {
+func (c *CHD) HashParameters() []uint64 {
 	return c.r
 }
 

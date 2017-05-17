@@ -25,7 +25,7 @@ func main() {
 	println("build...")
 	st := time.Now()
 	h, _ := b.Build()
-	println("done...", len(h.HashFuncs()), time.Since(st).Seconds())
+	println("done...", len(h.HashParameters()), time.Since(st).Seconds())
 
 	w, _ := os.Create("data.idx")
 
