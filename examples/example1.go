@@ -12,6 +12,8 @@ import (
 
 func main() {
 	b := mph.Builder()
+
+	println("start...")
 	for i := 0; i < 1000000; i++ {
 		k := fmt.Sprintf("%d", i)
 		v := fmt.Sprintf("%d", rand.Intn(10))
@@ -19,11 +21,14 @@ func main() {
 	}
 
 	time.Sleep(2 * time.Second)
-	println("start...")
+
+	println("build...")
+	st := time.Now()
 	h, _ := b.Build()
-	println("start...")
+	println("done...", len(h.HashFuncs()), time.Since(st).Seconds())
+
 	w, _ := os.Create("data.idx")
-	println("start...")
+
 	h.Write(w)
 	println("start...")
 

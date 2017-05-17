@@ -95,6 +95,10 @@ func Mmap(b []byte) (*CHD, error) {
 	return c, nil
 }
 
+func (c *CHD) HashFuns() []uint64 {
+	return c.r
+}
+
 // Get an entry from the hash table.
 func (c *CHD) Get(key []byte) []byte {
 	r0 := c.r[0]
